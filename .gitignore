@@ -1,5 +1,7 @@
 *.env
 chromadb/
+test_chromadb/
 chroma/
+data/
 __pycache__/
 *.pyc
