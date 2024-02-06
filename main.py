@@ -2,31 +2,40 @@ import streamlit as st
 
 from config import pdf_folder_path, persist_directory
 from utils.vectors import load_vector_db
-from utils.queries import create_agent_chain
+from utils.queries import create_qa_chain, create_compression_retriever, get_precise_response, get_diversed_answer, get_compressed_context_answer
 
-def get_response(query: str):
-  matching_chunks = vectordb.similarity_search(query,k=3)
-  print("Chunks of text matching the question:")
-  print(f"{matching_chunks}")
-
-  answer = chain.run(input_documents=matching_chunks, question=query)
-  return answer
+# model_name = "gpt-3.5-turbo"
+model_name = "gpt-4"
 
 vectordb = load_vector_db(
   pdf_folder_path,
   persist_directory
 )
-chain = create_agent_chain()
 
-# print(get_response("What are the two principles on genetics and behaviour?"))
-
+compression_retriever = create_compression_retriever(vectordb, model_name)
+chain = create_qa_chain(model_name)
 
 # Streamlit UI
 st.set_page_config(page_title="Edu Assistant", page_icon=":book:")
-st.header("Ask me anything about Psychology (from the PDF)")
+st.header("I'm here to help you with your learning!")
 
-form_input = st.text_input('Enter Query')
+types_of_questions = [
+  "Precise question",
+  "Question with diversed answer",
+  "Question for the whole context"
+]
+
+type_of_question = st.radio(
+  "What type of question do you want to ask?",
+  types_of_questions
+)
+question = st.text_input('Enter Query')
 submit = st.button("Generate")
 
 if submit:
-    st.write(get_response(form_input))
+  if type_of_question == type_of_question[0]:
+    st.write(get_precise_response(question, vectordb, chain))
+  elif type_of_question == type_of_question[1]:
+    st.write(get_diversed_answer(question, vectordb, chain))
+  elif type_of_question == type_of_question[2]:
+    st.write(get_compressed_context_answer(question, compression_retriever, chain))
