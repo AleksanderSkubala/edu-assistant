@@ -4,20 +4,65 @@ from langchain_openai import ChatOpenAI
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
 
-def create_prompt_template():
-  return "abd"
+from langchain.chains.prompt_selector import ConditionalPromptSelector, is_chat_model
+from langchain.prompts import PromptTemplate
+from langchain.prompts.chat import (
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  SystemMessagePromptTemplate
+)
 
-def create_qa_chain(model_name):
-  llm = ChatOpenAI(model_name=model_name, temperature=0)
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+
+def create_prompt_selector():
+  # Default prompt template used when the LLM is not a chat model
+  prompt_template = """
+  Use the following pieces of context to answer the question at the end. \
+  If you don't know the answer, just say that you don't know, don't try to make up an answer. \
+
+  {context}
+
+  Question: {question} \
+  Answer:
+  """
+  prompt = PromptTemplate(
+    template=prompt_template, input_variables=["context", "question"]
+  )
+
+  # Chart prompt template used when a chat model is used
+  system_template = """
+  You are a student taking an open book test. Use the pieces of context to answer the question. \
+  Always reffer to the given text. \
+  If you don't know the answer, don't try to make it up, say that you don't know. \
+  Context: ###
+  {context}
+  ###
+  """
+
+  messages = [
+    SystemMessagePromptTemplate.from_template(system_template),
+    HumanMessagePromptTemplate.from_template("{question}"),
+  ]
+  chat_prompt = ChatPromptTemplate.from_messages(messages)
+
+  prompt_selector = ConditionalPromptSelector(
+    default_prompt=prompt, conditionals=[(is_chat_model, chat_prompt)]
+  )
+
+  return prompt_selector
+
+
+def create_qa_chain():
+  prompt_selector = create_prompt_selector()
   chain = load_qa_chain(
     llm,
     chain_type="stuff",
-    verbose=True
+    verbose=True,
+    prompt=prompt_selector.get_prompt(llm)
   )
   return chain
 
-def create_compression_retriever(vectordb, model_name):
-  llm = ChatOpenAI(model_name=model_name, temperature=0)
+def create_compression_retriever(vectordb):
   compressor = LLMChainExtractor.from_llm(llm)
 
   compression_retriever = ContextualCompressionRetriever(

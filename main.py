@@ -12,8 +12,8 @@ vectordb = load_vector_db(
   persist_directory
 )
 
-compression_retriever = create_compression_retriever(vectordb, model_name)
-chain = create_qa_chain(model_name)
+compression_retriever = create_compression_retriever(vectordb)
+chain = create_qa_chain()
 
 # Streamlit UI
 st.set_page_config(page_title="Edu Assistant", page_icon=":book:")
