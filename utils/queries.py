@@ -29,9 +29,9 @@ def create_prompt_selector():
     template=prompt_template, input_variables=["context", "question"]
   )
 
-  # Chart prompt template used when a chat model is used
+  # Chat prompt template used when a chat model is used
   system_template = """
-  You are a student taking an open book test. Use the pieces of context to answer the question. \
+  You are a teacher answering a student's question. Use the pieces of context to answer the question. \
   Always reffer to the given text. \
   If you don't know the answer, don't try to make it up, say that you don't know. \
   Context: ###
