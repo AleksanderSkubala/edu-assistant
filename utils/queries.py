@@ -52,8 +52,7 @@ def create_prompt_selector():
   return prompt_selector
 
 
-def create_qa_chain():
-  prompt_selector = create_prompt_selector()
+def create_qa_chain(prompt_selector=create_prompt_selector()):
   chain = load_qa_chain(
     llm,
     chain_type="stuff",

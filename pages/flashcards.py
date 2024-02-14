@@ -2,6 +2,7 @@ import streamlit as st
 
 from config import pdf_folder_path, persist_directory
 from utils.vectors import load_vector_db
+from utils.flashcards import create_flashcards_on_topic
 
 vectordb = load_vector_db(
   pdf_folder_path,
@@ -25,7 +26,7 @@ submit = st.button("Generate")
 
 if submit:
   with st.spinner("Loading..."):
-
+    flashcards = create_flashcards_on_topic(vectordb, topic)
 
     with st.container(height=300):
       st.write(flashcards)
