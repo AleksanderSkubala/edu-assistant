@@ -18,6 +18,8 @@ with st.sidebar:
   st.page_link("pages/flashcards.py", label="Flashcards generator")
   st.page_link("pages/qa.py", label="Q&A")
 
+st.header("I'm here to help you with your learning!")
+
 topic = st.text_input("Provide a topic of which you want to have flashcards")
 submit = st.button("Generate")
 
@@ -26,5 +28,4 @@ if submit:
 
 
     with st.container(height=300):
-      # st.markdown(flashcards.content)
       st.write(flashcards)

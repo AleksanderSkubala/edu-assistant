@@ -12,7 +12,6 @@ vectordb = load_vector_db(
 )
 
 st.set_page_config(page_title="Edu Assistant", page_icon=":book:")
-st.header("I'm here to help you with your learning!")
 
 with st.sidebar:
   st.header("Edu Assistant")
@@ -20,6 +19,19 @@ with st.sidebar:
   st.page_link("pages/chapters.py", label="Chapters divider")
   st.page_link("pages/flashcards.py", label="Flashcards generator")
   st.page_link("pages/qa.py", label="Q&A")
+
+st.header("I'm here to help you with your learning!")
+
+summary_types = [
+  "Only general topics",
+  "Only detailed topics",
+  "General and detailed topics"
+]
+
+type_of_summary = st.radio(
+  "What type of summary do you want to generate?",
+  summary_types
+)
 
 submit = st.button("Generate summary")
 
@@ -36,6 +48,14 @@ if submit:
       )
       docs.append(page)
 
-    summary = get_combined_topics(docs)
+    summary = {}
+
+    if type_of_summary == summary_types[0]:
+      summary = get_general_topics(docs)
+    if type_of_summary == summary_types[1]:
+      summary = get_detailed_topics(docs)
+    if type_of_summary == summary_types[2]:
+      summary = get_combined_topics(docs)
+
     with st.container(height=300):
-      st.markdown(summary)
+      st.write(summary)

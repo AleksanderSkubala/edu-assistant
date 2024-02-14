@@ -14,7 +14,6 @@ chain = create_qa_chain()
 
 # Streamlit UI
 st.set_page_config(page_title="Edu Assistant", page_icon=":book:")
-st.header("I'm here to help you with your learning!")
 
 with st.sidebar:
   st.header("Edu Assistant")
@@ -22,6 +21,8 @@ with st.sidebar:
   st.page_link("pages/chapters.py", label="Chapters divider")
   st.page_link("pages/flashcards.py", label="Flashcards generator")
   st.page_link("pages/qa.py", label="Q&A")
+
+st.header("I'm here to help you with your learning!")
 
 questions_types = [
   "Precise question",
