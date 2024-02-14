@@ -34,7 +34,7 @@ type_of_question = st.radio(
   "What type of question do you want to ask?",
   questions_types
 )
-question = st.text_input('Enter Query')
+question = st.text_area('Enter Query')
 submit = st.button("Generate")
 
 if submit:
