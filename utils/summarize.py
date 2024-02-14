@@ -1,31 +1,65 @@
 from langchain_openai import ChatOpenAI
 from langchain.chains.llm import LLMChain
 
+from langchain_core.prompts import ChatPromptTemplate
 from langchain.prompts import PromptTemplate
 from langchain.chains import load_summarize_chain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 
-llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+from langchain.chains import create_extraction_chain
 
-def default_summarize_chain(docs):
-  chain = load_summarize_chain(llm, chain_type="stuff")
-  result = chain.run(input_documents=docs, question="Write in points main chapters that occured in this passage")
-  return result
+llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-1106")
 
-def map_and_reduce_summary(docs):
-  # Define prompt
-  prompt_template = """Write in points main chapters that occured in this passage:
-  "{text}"
-  CONCISE SUMMARY:"""
-  prompt = PromptTemplate.from_template(prompt_template)
+def extract_data(input_data, schema):
+  extraction_llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
+  extraction_chain = create_extraction_chain(schema, extraction_llm)
+  return extraction_chain.run(input_data)
 
-  # Define LLM chain
-  # llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-  llm_chain = LLMChain(llm=llm, prompt=prompt)
+def summarize_docs(docs, type, schema):
+  chain = load_summarize_chain(llm, chain_type=type)
+  summary = chain.run(docs)
 
-  # Define StuffDocumentsChain
-  stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
+  return extract_data(summary, schema)
 
-  # docs = loader.load()
-  result = stuff_chain.run(docs)
-  return result
+def get_general_topics(docs):
+  schema = {
+    "properties": {
+      "general_topics": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+    },
+    "required": ["general_topics"]
+  }
+
+  return summarize_docs(docs, "stuff", schema)
+
+def get_detailed_topics(docs):
+  schema = {
+    "properties": {
+      "topics": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+    },
+    "required": ["topics"]
+  }
+
+  return summarize_docs(docs, "map_reduce", schema)
+
+def get_combined_topics(docs):
+  schema = {
+    "properties": {
+      "general_topics": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+      "detailed_topics": {
+        "type": "array",
+        "items": {"type": "string"}
+      },
+    },
+    "required": ["general_topics", "detailed_topics"]
+  }
+
+  return summarize_docs(docs, "stuff", schema)

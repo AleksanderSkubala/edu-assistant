@@ -2,7 +2,9 @@ import streamlit as st
 
 from config import pdf_folder_path, persist_directory
 from utils.vectors import load_vector_db
-from utils.summarize import default_summarize_chain, stuff_summarize
+from utils.summarize import get_combined_topics, get_general_topics, get_detailed_topics
+
+from langchain.docstore.document import Document
 
 vectordb = load_vector_db(
   pdf_folder_path,
@@ -23,7 +25,17 @@ submit = st.button("Generate summary")
 
 if submit:
   with st.spinner("Loading..."):
+    all_texts = vectordb.get()["documents"]
+    all_metadatas = vectordb.get()["metadatas"]
+
+    docs = []
+    for doc_index in range(len(all_texts)):
+      page = Document(
+        page_content=all_texts[doc_index],
+        metadata=all_metadatas[doc_index]
+      )
+      docs.append(page)
+
+    summary = get_combined_topics(docs)
     with st.container(height=300):
-      print(vectordb.get()["documents"])
-      summary = default_summarize_chain(vectordb.similarity_search(" "))
       st.markdown(summary)
