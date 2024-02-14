@@ -73,6 +73,8 @@ def create_prompt_selector():
 
   return prompt_selector
 
+
+
 def create_flashcards_on_topic(vectordb, topic):
   prompt_selector = create_prompt_selector()
   chain = create_qa_chain(prompt_selector)
@@ -82,3 +84,6 @@ def create_flashcards_on_topic(vectordb, topic):
 
   terms = get_compressed_context_answer(question, compression_retriever, chain)
   return extract_flashcards(terms)
+
+def create_flashcards_generally(docs):
+  return docs

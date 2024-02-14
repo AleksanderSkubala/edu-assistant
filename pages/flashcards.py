@@ -2,7 +2,9 @@ import streamlit as st
 
 from config import pdf_folder_path, persist_directory
 from utils.vectors import load_vector_db
-from utils.flashcards import create_flashcards_on_topic
+from utils.flashcards import create_flashcards_on_topic, create_flashcards_generally
+
+from langchain.docstore.document import Document
 
 vectordb = load_vector_db(
   pdf_folder_path,
@@ -21,12 +23,40 @@ with st.sidebar:
 
 st.header("I'm here to help you with your learning!")
 
-topic = st.text_input("Provide a topic of which you want to have flashcards")
+flashcards_set_types = [
+  "a specific topic",
+  "the whole document",
+]
+
+type_of_flashcards_set = st.radio(
+  "Generate flaschcards on:",
+  flashcards_set_types
+)
+
+topic = ""
+if type_of_flashcards_set == flashcards_set_types[0]:
+  topic = st.text_input("Provide a topic of which you want to have flashcards")
+
 submit = st.button("Generate")
 
 if submit:
   with st.spinner("Loading..."):
-    flashcards = create_flashcards_on_topic(vectordb, topic)
+    flashcards = []
+    if type_of_flashcards_set == flashcards_set_types[0]:
+      flashcards = create_flashcards_on_topic(vectordb, topic)
+    if type_of_flashcards_set == flashcards_set_types[1]:
+      all_texts = vectordb.get()["documents"]
+      all_metadatas = vectordb.get()["metadatas"]
+
+      docs = []
+      for doc_index in range(len(all_texts)):
+        page = Document(
+          page_content=all_texts[doc_index],
+          metadata=all_metadatas[doc_index]
+        )
+        docs.append(page)
+
+      flashcards = create_flashcards_generally(docs)
 
     with st.container(height=300):
       st.write(flashcards)
