@@ -1,10 +1,12 @@
 from langchain_openai import ChatOpenAI
+from langchain_community.vectorstores import Chroma
 
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import create_extraction_chain
 from langchain.chains.llm import LLMChain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains import MapReduceDocumentsChain, ReduceDocumentsChain
+from langchain.docstore.document import Document
 
 from langchain.chains.prompt_selector import ConditionalPromptSelector, is_chat_model
 from langchain.prompts import PromptTemplate
@@ -19,7 +21,7 @@ from utils.queries import create_qa_chain, create_compression_retriever, get_com
 extraction_llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 summary_llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-1106")
 
-def extract_flashcards(input_data):
+def extract_flashcards(input_data: str) -> str:
   schema = {
     "properties": {
       "question": {"type": "string"},
@@ -31,7 +33,7 @@ def extract_flashcards(input_data):
   extraction_chain = create_extraction_chain(schema, extraction_llm)
   return extraction_chain.run(input_data)
 
-def create_prompt_selector():
+def create_prompt_selector() -> ConditionalPromptSelector:
   # Default prompt template used when the LLM is not a chat model
   prompt_template = """
   Use the following pieces of context to create a set of flashcards on the given topic. \
@@ -77,7 +79,7 @@ def create_prompt_selector():
   return prompt_selector
 
 # A function that uses a Map and Reduce method for summaring the text, to create detailed flashcards
-def create_map_reduce_chain():
+def create_map_reduce_chain() -> MapReduceDocumentsChain:
   map_template = """
   The following os a set of documents
   {docs}
@@ -128,7 +130,7 @@ def create_map_reduce_chain():
 
   return map_reduce_chain
 
-def create_flashcards_on_topic(vectordb, topic):
+def create_flashcards_on_topic(vectordb: Chroma, topic: str) -> str:
   prompt_selector = create_prompt_selector()
   chain = create_qa_chain(prompt_selector)
   compression_retriever = create_compression_retriever(vectordb)
@@ -139,7 +141,7 @@ def create_flashcards_on_topic(vectordb, topic):
   print(terms)
   return extract_flashcards(terms)
 
-def create_flashcards_generally(docs):
+def create_flashcards_generally(docs: list[Document]) -> str:
   chain = create_map_reduce_chain()
   terms = chain.run(docs)
   return terms
