@@ -1,7 +1,6 @@
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import Chroma
 
-from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import create_extraction_chain
 from langchain.chains.llm import LLMChain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
