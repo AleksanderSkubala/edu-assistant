@@ -71,6 +71,7 @@ No linter nor formatter is being currently used: *WIP*
 
 
 ## How to use it
+### How can you learn with this app?
 If you have already set up the project, the streamlit server is up and running and you want to get straight to learning, here is the short brief on learning methods assisted by this app and how to use them.
 
 This app bases on two crucial research-based methods of learning enhancing:
