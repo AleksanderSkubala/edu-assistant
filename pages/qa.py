@@ -27,7 +27,7 @@ st.header("I'm here to help you with your learning!")
 questions_types = [
   "Precise question",
   "Question with diversed answer",
-  "Question for the whole context"
+  "Question with the compressed context"
 ]
 
 type_of_question = st.radio(
