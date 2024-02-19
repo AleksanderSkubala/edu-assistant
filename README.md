@@ -59,6 +59,10 @@ Materials must be in the PDF format and stored in the `PDF_FOLDER_PATH`. When th
 
 If you want to change the matierials stored in the ChromaDB, delete the contents in `PERSIST_DIRECTORY`.
 ### Launch
+Before you launch you might run the following command to avoid unnecesary errors (it will work without this, although it will throw errors, but after a refresh everything will work):
+```sh
+python -m init_vectordb
+```
 To launch the app you simply run:
 ```sh
 python -m streamlit run main.py
