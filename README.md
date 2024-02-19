@@ -65,10 +65,9 @@ python -m streamlit run main.py
 The browser tab should open automatically, **happy learning**!
 
 
-## How to use it
-Lotem ipsum dolor sit amet
-
-
 ## Linting and formatting
 No linter nor formatter is being currently used: *WIP*
 
+
+## How to use it
+If you have already set up the project, the streamlit server is up and running and you want to get straight to learning

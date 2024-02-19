@@ -3,5 +3,6 @@ chromadb/
 test_chromadb/
 chroma/
 data/
+jupyter/
 __pycache__/
 *.pyc
