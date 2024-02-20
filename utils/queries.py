@@ -79,7 +79,7 @@ def get_precise_response(query: str, vectordb: Chroma, chain: LLMChain) -> str:
 
   print("Chunks of text matching the question:")
   for chunk in matching_chunks:
-    print(f"Page number: {chunk.metadata["page"]}")
+    print(f'Page number: {chunk.metadata["page"]}')
 
   answer = chain.run(input_documents=matching_chunks, question=query)
   return answer
@@ -90,7 +90,7 @@ def get_diversed_answer(query: str, vectordb: Chroma, chain: LLMChain) -> str:
 
   print("Chunks of text matching the question:")
   for chunk in matching_chunks:
-    print(f"Page number: {chunk.metadata["page"]}")
+    print(f'Page number: {chunk.metadata["page"]}')
 
   answer = chain.run(input_documents=matching_chunks, question=query)
   return answer
@@ -102,7 +102,7 @@ def get_compressed_context_answer(query: str, compression_retriever: ContextualC
 
   print("Chunks of text matching the question:")
   for chunk in matching_chunks:
-    print(f"Page number: {chunk.metadata["page"]}")
+    print(f'Page number: {chunk.metadata["page"]}')
 
 
   answer = chain.run(input_documents=matching_chunks, question=query)
