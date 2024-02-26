@@ -40,6 +40,7 @@ def create_prompt_selector() -> ConditionalPromptSelector:
   This information might include for example: names, terms, dates, specific words, important events, scientific phenomenons, research examples, etc. \
   Give firstly a qestion about the selected piece of information, then followed by an appropraite answer. \
   If you don't know the answer, just say that you don't know, don't try to make up an answer, use only the data and information from the given context. \
+  The flashcards must be created in the language of the base text. \
 
   {context}
 
@@ -59,6 +60,7 @@ def create_prompt_selector() -> ConditionalPromptSelector:
   Give firstly a qestion about the selected piece of information, then followed by an appropraite answer. \
   If you don't know the answer, just say that you don't know, don't try to make up an answer, use only the data and information from the given context. \
   Always reffer to the given text. \
+  The flashcards must be created in the language of the base text. \
 
   Context: ###
   {context}
@@ -88,6 +90,7 @@ def create_map_reduce_chain() -> MapReduceDocumentsChain:
   This information might include for example: names, terms, dates, specific words, important events, scientific phenomenons, research examples, etc. \
   Give firstly a qestion about the selected piece of information, then followed by an appropraite answer. \
   If you don't know the answer, just say that you don't know, don't try to make up an answer, use only the data and information from the given context. \
+  The flashcards must be created in the language of the base text. \
 
   Flashcards:
   """
@@ -101,6 +104,7 @@ def create_map_reduce_chain() -> MapReduceDocumentsChain:
   Take all these flashcards and combine them into a final set. \
   Your job is to do it by reducing the repeating questions, question that are very similar to each other or the questions that cover very similiar topics. \
   Try to leave as many flashcards as possible. \
+  The flashcards must be created in the language of the base text. \
 
   Final Flashcards:
   """
