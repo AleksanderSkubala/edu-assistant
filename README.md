@@ -45,7 +45,7 @@ Secondly, after you have installed the required dependencies you should update y
 
 There are 3 crucial variables that need to be set:
 1. `OPENAI_API_KEY` - your OpenAI API key (If you don't want to use OpenAI models and use an open-source one instead, you must change that in code, easier method of changing a model for a whole project will be added *WIP*)
-2. `PDF_FOLDER_PATH` - this is the path of where your materials in PDF format should be stored, from this path the files will be fetched for later processing
+2. `PDF_FOLDER_PATH` - this is the path of where your materials in PDF format should be stored, from this path the files will be fetched for later processing. From now on, also Markdown files can be processed. Just put them into the directory along with PDF files.
 3. `PERSIST_DIRECTORY` - this is the path where the ChromaDB will be persisted for later use. If no path is set, ChromaDB will by default create its own fodler in path `chroma`
 
 An example `.env` file might look like:
@@ -55,7 +55,7 @@ PDF_FOLDER_PATH=\\data\\
 PERSIST_DIRECTORY=\\test_chromadb\\
 ```
 ### Materials
-Materials must be in the PDF format and stored in the `PDF_FOLDER_PATH`. When the app is launched for the first time and there is no vectoredb stored yet, app will fetch data from all the PDF from the given directory, split the text into chunks, vectorize those chunks and persist them in the directory given in `PERSIST_DIRECTORY`.
+Materials must be in the PDF format and stored in the `PDF_FOLDER_PATH`. When the app is launched for the first time and there is no vectoredb stored yet, app will fetch data from all the PDF (and Markdown) files from the given directory, split the text into chunks, vectorize those chunks and persist them in the directory given in `PERSIST_DIRECTORY`.
 
 If you want to change the matierials stored in the ChromaDB, delete the contents in `PERSIST_DIRECTORY`.
 ### Launch

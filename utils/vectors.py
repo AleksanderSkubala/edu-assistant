@@ -2,7 +2,7 @@ import os
 
 from config import api_key
 
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader, UnstructuredMarkdownLoader
 from langchain.text_splitter import CharacterTextSplitter
 
 # from langchain_openai import OpenAIEmbeddings
@@ -15,8 +15,14 @@ def fetch_and_chunk_documents(pdf_folder_path: str) -> list:
   for file in os.listdir(pdf_folder_path):
     if file.endswith('.pdf'):
       file_path = os.path.join(pdf_folder_path, file)
-      print(f"Processing files: {file_path}")
+      print(f"Processing a PDF file: {file_path}")
       doc_loader = PyPDFLoader(file_path, extract_images=True)
+      documents.extend(doc_loader.load())
+      print(f"File {file_path} is done")
+    if file.endswith('.md'):
+      file_path = os.path.join(pdf_folder_path, file)
+      print(f"Processing a Markdown: {file_path}")
+      doc_loader = UnstructuredMarkdownLoader(file_path, mode="elements")
       documents.extend(doc_loader.load())
       print(f"File {file_path} is done")
   print(f"Splitting text...")
