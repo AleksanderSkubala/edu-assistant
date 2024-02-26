@@ -21,8 +21,8 @@ def fetch_and_chunk_documents(pdf_folder_path: str) -> list:
       print(f"File {file_path} is done")
     if file.endswith('.md'):
       file_path = os.path.join(pdf_folder_path, file)
-      print(f"Processing a Markdown: {file_path}")
-      doc_loader = UnstructuredMarkdownLoader(file_path, mode="elements")
+      print(f"Processing a Markdown file: {file_path}")
+      doc_loader = UnstructuredMarkdownLoader(file_path)
       documents.extend(doc_loader.load())
       print(f"File {file_path} is done")
   print(f"Splitting text...")
